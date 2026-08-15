@@ -24,7 +24,7 @@ Gender = st.selectbox("Gender", ['Male', 'Female'])
 NumberOfPersonVisiting = st.number_input("Number of Persons Visiting", 1, 10, 1)
 PreferredPropertyStar = st.selectbox("Preferred Property Star Rating", [3, 4, 5])
 MaritalStatus = st.selectbox("Marital Status", ['Single', 'Married', 'Divorced'])
-NumberOfTrips = st.number_input("Number of Trips (annually)", 0, 50, 5)
+NumberOfTrips = st.number_input("NumberOfTrips (annually)", 0, 50, 5)
 Passport = st.checkbox("Has Passport")
 OwnCar = st.checkbox("Owns Car")
 NumberOfChildrenVisiting = st.number_input("Number of Children Visiting (<5 years old)", 0, 5, 0)
@@ -32,6 +32,7 @@ Designation = st.selectbox("Designation", ['Manager', 'Executive', 'Senior Manag
 MonthlyIncome = st.number_input("Monthly Income", 0.0, 200000.0, 50000.0, 1000.0)
 PitchSatisfactionScore = st.selectbox("Pitch Satisfaction Score (1=Low, 5=High)", [1, 2, 3, 4, 5])
 ProductPitched = st.selectbox("Product Pitched", ['Wellness', 'Domestic', 'International', 'Glamping', 'Adventure', 'Resort'])
+NumberOfFollowups = st.number_input("Number of Follow-ups", 0, 10, 3)
 
 # Prepare input data for prediction
 input_data = pd.DataFrame([{
@@ -51,7 +52,8 @@ input_data = pd.DataFrame([{
     "Designation": Designation,
     "MonthlyIncome": MonthlyIncome,
     "PitchSatisfactionScore": PitchSatisfactionScore,
-    "ProductPitched": ProductPitched
+    "ProductPitched": ProductPitched,
+    "NumberOfFollowups": NumberOfFollowups
 }])
 
 if st.button("Predict Package Purchase"):
