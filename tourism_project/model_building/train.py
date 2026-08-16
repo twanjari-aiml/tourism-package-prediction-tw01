@@ -56,6 +56,8 @@ model_pipeline = make_pipeline(preprocessor, xgb_model)
 # Start MLflow run
 with mlflow.start_run():
     # Hyperparameter tuning
+    # Business objective is to identify potential package buyers before contacting them.
+    # Missing an actual buyer is potentially costly, so optimizing recall
     grid_search = GridSearchCV(model_pipeline, param_grid, cv=5, scoring="recall", n_jobs=-1)
     grid_search.fit(Xtrain, ytrain)
 
@@ -79,6 +81,8 @@ with mlflow.start_run():
     best_model = grid_search.best_estimator_
     print("Best params:", grid_search.best_params_)
 
+    # A 0.45 threshold is used to increase sensitivity toward
+    # identifying potential package buyers (ProdTaken = 1).
     classification_threshold = 0.45
 
     y_pred_train_proba = best_model.predict_proba(Xtrain)[:, 1]
@@ -102,6 +106,16 @@ with mlflow.start_run():
         "test_recall": test_report["1"]["recall"],
         "test_f1-score": test_report["1"]["f1-score"]
     })
+
+    print("\n==============================")
+    print("BEST MODEL")
+    print("==============================")
+
+    print("Best Parameters:")
+    print(grid_search.best_params_)
+
+    print("\nBest Cross-Validation Recall:")
+    print(grid_search.best_score_)
 
     # Save next to app.py so the Streamlit app can load it directly, and log
     # it as an MLflow artifact for traceability
