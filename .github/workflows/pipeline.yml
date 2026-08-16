@@ -52,7 +52,7 @@ jobs:
             ytest.csv
 
   # ---------- JOB 3: Model Training + MLflow Tracking ----------
-  model-traning:
+  model-training:
     needs: data-prep
     runs-on: ubuntu-latest
     steps:
