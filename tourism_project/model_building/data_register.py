@@ -1,5 +1,6 @@
 import pandas as pd
 
+#Data set path in colab folder
 RAW_PATH = "tourism_project/data/tourism.csv"
 
 # Load the raw dataset
