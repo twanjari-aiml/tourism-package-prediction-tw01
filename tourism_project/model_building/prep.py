@@ -3,6 +3,12 @@ from sklearn.model_selection import train_test_split
 
 #Load the data set
 df = pd.read_csv("tourism_project/data/tourism.csv") 
+print("Dataset loaded successfully.")
+print(f"Initial shape: {df.shape}")
+
+# ---------------------------------------------------------
+# Remove unnecessary columns
+# ---------------------------------------------------------
 df.drop(columns=["CustomerID", "Unnamed: 0"], inplace=True, errors='ignore')
 
 # NOTE: Various categorical columns are left as it is.
@@ -10,14 +16,58 @@ df.drop(columns=["CustomerID", "Unnamed: 0"], inplace=True, errors='ignore')
 # raw values. Encoding it here (e.g. LabelEncoder) would make training
 # and serving use different representations, silently breaking predictions.
 
+# ---------------------------------------------------------
+# Data quality checks
+# ---------------------------------------------------------
+print("\nMissing values before cleaning:")
+print(df.isna().sum())
+
+print("\nDuplicate rows before cleaning:")
+print(df.duplicated().sum())
+
+# ---------------------------------------------------------
+# Remove duplicate records
+# ---------------------------------------------------------
+df.drop_duplicates(inplace=True)
+
+# ---------------------------------------------------------
+# Target validation
+# ---------------------------------------------------------
+if "ProdTaken" not in df.columns:
+    raise ValueError("Target column 'ProdTaken' not found.")
+
+if not set(df["ProdTaken"].dropna().unique()).issubset({0, 1}):
+    raise ValueError(
+        "ProdTaken must contain only 0 and 1."
+    )
+
+# ---------------------------------------------------------
+# Check remaining missing values
+# ---------------------------------------------------------
+
+print("\nMissing values after cleaning:")
+print(df.isna().sum())
+
+print("\nFinal dataset shape:")
+print(df.shape)
+
+# ---------------------------------------------------------
+# Separate features and target
+# ---------------------------------------------------------
 X = df.drop(columns=["ProdTaken"])
 y = df["ProdTaken"]
 
+# ---------------------------------------------------------
+# Train-test split
+# ---------------------------------------------------------
 # stratify=y keeps the (imbalanced) failure ratio consistent across splits
 Xtrain, Xtest, ytrain, ytest = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
+# ---------------------------------------------------------
+# Train-test split
+# ---------------------------------------------------------
 Xtrain.to_csv("Xtrain.csv", index=False)
 Xtest.to_csv("Xtest.csv", index=False)
 ytrain.to_csv("ytrain.csv", index=False)
